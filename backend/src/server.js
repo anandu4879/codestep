@@ -1,6 +1,7 @@
 import express from 'express';
 import {ENV} from './lib/env.js';
 import path from 'path';
+import { connectDB } from './lib/db.js';
 
 const app= express();
 
@@ -17,7 +18,7 @@ app.get("/books",(req,res)=>{
 
 // make  app ready for deployment
 
-if(ENV.NODE_ENV==="production"){
+if(ENV.NODE_ENV==="deployment"){
     app.use(express.static(path.join(__dirname,'../frontend/dist')));
 
     app.get("/{*any}",(req,res)=>{
@@ -26,5 +27,16 @@ if(ENV.NODE_ENV==="production"){
 }
 
 
+const startServer= async()=>{
+    try{
+        await connectDB();
+        app.listen(ENV.PORT,()=>{
+            console.log(`Server started on port ${ENV.PORT}`);
+        });
+    }catch(err){
+        console.log("Error starting server:", err);
+        process.exit(1);
+    }
+}
 
-app.listen(ENV.PORT,()=> console.log("Server running on port:", ENV.PORT));
+startServer();
