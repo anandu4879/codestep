@@ -2,10 +2,22 @@ import express from 'express';
 import {ENV} from './lib/env.js';
 import path from 'path';
 import { connectDB } from './lib/db.js';
+import cors from 'cors';
+import{serve} from 'inngest/express';
+
 
 const app= express();
 
 const  __dirname = path.resolve();
+
+//middleware
+app.use(express.json());
+
+//server allows a browser to include cookies on requests
+app.use(cors({orgin:ENV.CLIENT_URL,credentials:true}));
+
+
+app.use("/api/inngest",serve({client: inngest,functions}));
 
 
 app.get("/health",(req,res)=>{
