@@ -8,6 +8,8 @@ import { connectDB } from "./lib/db.js";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./lib/inngest.js";
 import chatRoutes from "./routes/chatRoutes.js";
+import sessiontRoutes from "./routes/sessionRoute.js";
+
 
 const app = express();
 
@@ -29,6 +31,7 @@ app.get("/health", (req, res) => {
 });
 
 app.use('/api/chat', chatRoutes);
+app.use('/api/sessions', sessiontRoutes);
 
 if (ENV.NODE_ENV === "production") {
   const frontendPath = path.resolve(__dirname, "../../frontend/dist");
