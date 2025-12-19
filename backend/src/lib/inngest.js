@@ -5,7 +5,7 @@ import User from "../models/User.js";
 export const inngest = new Inngest({id: "codestep"});
 
 const syncUser = inngest.createFunction(
-    {name: "Sync User from Clerk to MongoDB"},
+    {name: "Sync-user"},
     {event: "clerk/user.created"},
     async({event})=>{
         await connectDB();
@@ -30,7 +30,7 @@ const deleteUserFromDB = inngest.createFunction(
         const {id}= event.data;
 
        await User.deleteOne({clerkId:id});
-        await User.create(newUser);
+       
 
         //to do smthg esle
     }
