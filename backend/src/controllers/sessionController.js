@@ -104,6 +104,13 @@ export async function joinSession(req, res) {
         session.participant=userId;
         await session.save();
 
+        if(session.status==="active"){
+            return res.status(400).json({msg:"Cannot join a completed session"});
+        }
+        if(session.host.toString()===userId.toString()){
+            return res.status(400).json({msg:"Host cannot join as participant"});
+        }
+
         const channel =chatClient.channel("messaging",session.callId);
         await channel.addMembers([clerkId]);
 
@@ -132,8 +139,6 @@ export async function endSession(req, res) {
         if(session.status==="completed"){
             return res.status(400).json({msg:"Session already completed"});
         }
-        session.status="completed";
-        await session.save();
         
         //delete the video call
         const call= StreamClient.video.call("default",session.callId)
@@ -142,7 +147,9 @@ export async function endSession(req, res) {
         //deleete chat
         const channel= chatClient.channel("messaging",session.callId);
         await channel.delete();
-
+        session.status="completed";
+        await session.save();
+        
         res.status(200).json({msg:"Session ended successfully",session});
     } catch (error) {
         console.error("Error in ending session:", error);
