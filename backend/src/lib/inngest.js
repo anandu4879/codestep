@@ -12,15 +12,23 @@ const syncUser = inngest.createFunction(
         
         const {id,first_name,email_addresses,last_name,image_url}= event.data;
 
-        const newUser={
-            clerkId:id,
-            email_addresses: email_addresses[0]?.email_address,
-            name:`${first_name||""} ${last_name||""}`,
-            profileImage: image_url
-        }
-        await User.create(newUser);
+        const email = email_addresses?.[0]?.email_address;
+
+if (!email) {
+  throw new Error("User email missing from Clerk event");
+}
+
+const newUser = {
+  clerkId: id,
+  email,
+  name: `${first_name || ""} ${last_name || ""}`.trim(),
+  profileImage: image_url
+};
+
+await User.create(newUser);
     }
 )
+
 const deleteUserFromDB = inngest.createFunction(
     {id: "delete-user-from-db"},
     {event: "clerk/user.deleted"},
