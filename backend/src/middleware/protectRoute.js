@@ -5,7 +5,7 @@ export const protectRoute= [
     requireAuth(),
     async (req,resizeBy,next)=>{
         try {
-            const clerkId=req.auth().UserId;
+            const clerkId=req.auth().userId;
             if(!clerkId){
                 return res.status(401).json({msg:"Unauthorized - invalid token"});
             }

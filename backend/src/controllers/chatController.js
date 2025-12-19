@@ -1,4 +1,4 @@
-import { userAgent } from "next/server";
+import { streamClient } from "../lib/stream.js";
 
 export async function getStreamToken(req, res) {
     try {
