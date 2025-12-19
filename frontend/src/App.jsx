@@ -6,7 +6,7 @@ function App() {
 
   return (
     <>
-    <h1>Welcome to the app</h1>
+    <h1>Hi thakkudu unni vave 😘/h1>
     <SignedOut>
       <SignInButton mode='modal'>
         <button>
