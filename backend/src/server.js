@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import { clerkMiddleware } from '@clerk/express'
 import { ENV } from "./lib/env.js";
 import { connectDB } from "./lib/db.js";
 import { serve } from "inngest/express";
@@ -19,11 +19,15 @@ app.use(cors({
   credentials: true,
 }));
 
+app.use(clerkMiddleware())// this add auth field to req object
+
 app.use("/api/inngest", serve({ client: inngest, functions }));
 
 app.get("/health", (req, res) => {
   res.json({ msg: "success from api health" });
 });
+
+app.use('/api/chat', chatRoutes);
 
 if (ENV.NODE_ENV === "production") {
   const frontendPath = path.resolve(__dirname, "../../frontend/dist");
