@@ -1,9 +1,9 @@
 import { SignedIn, SignedOut, SignInButton, SignOutButton, UserButton, useUser } from '@clerk/clerk-react'
 import { Navigate, Route, Routes } from 'react-router';
-import AboutPage from './pages/AboutPage';
-import HomePage from './pages/HomePage';
-import ProblemsPage from './pages/ProblemsPAge';
+
 import { Toaster } from 'react-hot-toast';
+import HomePage from './pages/HomePAge';
+import ProblemsPage from './pages/ProblemsPAge';
 
 
 
@@ -15,7 +15,6 @@ const {isSignedIn} = useUser();
     <>
     <Routes>
     <Route path="/" element={<HomePage />} />
-    <Route path="/about" element={<AboutPage />} />
     <Route path="/problems" element={isSignedIn?<ProblemsPage/>: <Navigate to={"/"} />} />
     
     
