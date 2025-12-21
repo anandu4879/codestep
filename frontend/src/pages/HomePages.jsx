@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CheckIcon, SparkleIcon, VideoIcon, ZapIcon } from "lucide-react";
+import { ArrowRightIcon, CheckIcon, Code2Icon, SparkleIcon, User2Icon, VideoIcon, ZapIcon } from "lucide-react";
 import { Link } from "react-router";
 import { SignInButton } from "@clerk/clerk-react";
 
@@ -103,6 +103,60 @@ function HomePage() {
         <img src="/hero3.png" alt="CodeStep Platform" className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transistion-transform duration-500" />
       </div>
      </div>
+     {/*FEATURES SECTION */}
+     <div className="max-w-7xl mx-auto px-4 py-20">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl font-bold mb-4">
+          Everything You Need to Code <span className="text-primary font-mono">Together</span>
+        </h2>
+        <p className="text-lg text-base-content/70 max-w-2xl mx-auto">
+          CodeStep offers a comprehensive suite of features designed to enhance your collaborative coding experience.
+        </p>
+
+      </div>
+      {/* Features Grid */}
+      <div className="grid md:grid-cols-3 gap-8">
+        {/* Feature Card 1 */}
+        <div className="card bg-base-100 shadow-xl">
+          <div className="card-body items-center text-center ">
+            <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
+              <VideoIcon className="size-8 text-primary"/>
+            </div>
+            <h3 className="card-title">Real-Time Video Chat</h3>
+            <p className="text-base-content/70">
+            Collaborate in real-time with other developers in a secure and private environment.</p>
+          </div>
+
+        </div>
+       {/* Feature Card 2 */}
+        <div className="card bg-base-100 shadow-xl">
+          <div className="card-body items-center text-center ">
+            <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
+              <Code2Icon className="size-8 text-primary"/>
+            </div>
+            <h3 className="card-title">Live Code Editor</h3>
+            <p className="text-base-content/70">
+            Colaborate in real-time with syntax highlighting and multi-language support</p>
+          </div>
+
+        </div>
+        {/* Feature Card 3 */}
+        <div className="card bg-base-100 shadow-xl">
+          <div className="card-body items-center text-center ">
+            <div className="size-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-4">
+              <User2Icon className="size-8 text-primary"/>
+            </div>
+            <h3 className="card-title">Easy Collaboration</h3>
+            <p className="text-base-content/70">
+            Share your screen, discuss code, and work together in real-time</p>
+          </div>
+
+        </div>
+        
+      </div>
+     </div>
+
+
     </div>
   )
 }
