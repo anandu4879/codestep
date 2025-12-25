@@ -74,3 +74,4 @@ function ProblemPage() {
     </div>
   )
 }
+export default ProblemPage;
