@@ -34,7 +34,7 @@ function ProblemsPage() {
                           </div>
                           <div className='flex-1'>
                             <div className='flex items-center gap-2 mb-1'>
-                              <h2 className='text-xl font-bold'>${problem.title}</h2>
+                              <h2 className='text-xl font-bold'>{problem.title}</h2>
                               <span className={`badge ${getDifficultyBadgeClass(problem.difficulty)}`}>{problem.difficulty}</span>
                             </div>
                           <p className='text-sm text-base-content/60'>
