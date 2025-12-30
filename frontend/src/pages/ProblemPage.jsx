@@ -6,7 +6,7 @@ import Navbar from '../components/Navbar';
 import{Panel, PanelGroup, PanelResizeHandle}from 'react-resizable-panels';
 import { Code } from 'lucide-react';
 import  OutputPanel from '../components/OutputPanel';
-import  CodeEditor  from '../components/CodeEditor';
+import  CodeEditorPanel  from '../components/CodeEditorPanel';
 import  ProblemDiscription  from '../components/ProblemDescription';
 import toast from 'react-hot-toast'; 
 import { executeCode } from "../lib/piston";
@@ -126,7 +126,7 @@ function ProblemPage() {
             <Panel defaultSize={60} minSize={30}>
                 <PanelGroup direction="vertical">
                     <Panel defaultSize={70} minSize={30}>
-                        <CodeEditor
+                        <CodeEditorPanel
                         selectedLanguage={selectedLanguage}
                         code={code}
                         isRunning={isRunning}
