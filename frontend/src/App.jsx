@@ -1,10 +1,11 @@
-import { SignedIn, SignedOut, SignInButton, SignOutButton, UserButton, useUser } from '@clerk/clerk-react'
-import { Navigate, Route, Routes } from 'react-router';
+import { useUser } from '@clerk/clerk-react';
 import { Toaster } from 'react-hot-toast';
-import HomePage from './pages/HomePages';//name mismatch fixed still dont get what caused it
-import ProblemsPage from './pages/ProblemsPage';
-import ProblemPage from './pages/ProblemPage';
+import { Navigate, Route, Routes } from 'react-router';
 import DashboardPage from './pages/DashboardPage';
+import HomePage from './pages/HomePages'; //name mismatch fixed still dont get what caused it
+import ProblemPage from './pages/ProblemPage';
+import ProblemsPage from './pages/ProblemsPage';
+import SessionPage from './pages/SessionPage';
 
 
 
@@ -22,6 +23,7 @@ if(!isLoaded) return null;
     <Route path="/dashboard" element={isSignedIn?<DashboardPage />: <Navigate to={"/"} />} />
     <Route path="/problems" element={isSignedIn?<ProblemsPage/>: <Navigate to={"/"} />} />
     <Route path="/problem/:id" element={isSignedIn?<ProblemPage/>: <Navigate to={"/"} />} />
+    <Route path="/session/:id" element={isSignedIn?<SessionPage/>: <Navigate to={"/"} />} />
     
     
   </Routes>
