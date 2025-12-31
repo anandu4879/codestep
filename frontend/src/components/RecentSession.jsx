@@ -59,14 +59,17 @@ function RecentSessions({ sessions, isLoading }) {
                   </div>
 
                   <div className="space-y-2 text-sm opacity-80 mb-4">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4" />
-                      <span>
-                        {formatDistanceToNow(new Date(session.createdAt), {
-                          addSuffix: true,
-                        })}
-                      </span>
-                    </div>
+                   <div className="flex items-center gap-2">
+  <Clock className="w-4 h-4" />
+  <span>
+    {session?.createdAt && !isNaN(new Date(session.createdAt))
+      ? formatDistanceToNow(new Date(session.createdAt), {
+          addSuffix: true,
+        })
+      : "Just now"}
+  </span>
+</div>
+
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4" />
                       <span>
