@@ -127,7 +127,7 @@ function HomePage() {
 
         </div>
         {/* Right Content */}
-        <img src="/hero3.png" alt="CodeStep Platform" className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transistion-transform duration-500 " />
+        <img src="/hero5.png" alt="CodeStep Platform" className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transistion-transform duration-500 " />
       </div>
      </div>
      {/*FEATURES SECTION */}
