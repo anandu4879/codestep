@@ -78,29 +78,56 @@ function HomePage() {
               <ArrowRightIcon className="size-4 inline-block ml-2"/>
             </button>
           </SignInButton>
-          <button className="btn btn-primary btn-lg btn-outline rounded-2xl mt-8 flex items-center hover:scale-105 transition-transform duration-200 hover:bg-transparent hover:text-primary hover:border-primary">
+          {/* <button className="btn btn-primary btn-lg btn-outline rounded-2xl mt-8 flex items-center hover:scale-105 transition-transform duration-200 hover:bg-transparent hover:text-primary hover:border-primary">
             <VideoIcon className="size-5 "/>
             Watch Demo
-          </button>
+          </button> */}
         </div>
         {/* End of Main Content */}
-        <div className="stats stats-vertical lg:stats-horizontal shadow mt-6 bg-base-100 sgadow-lg">
-          <div className="stat ">
-            <div className="stat-value text-primary">10K+</div>
-            <div className="stat-title">Active Users</div>
-          </div>
-            <div className="stat ">
-            <div className="stat-value text-secondary">50K+</div>
-            <div className="stat-title">Session</div>
-          </div>
-            <div className="stat ">
-            <div className="stat-value text-accent">99%</div>
-            <div className="stat-title"> Uptime</div>
-          </div>
-        </div>
+  <div className="mt-6 w-full">
+  <div
+    className="
+      stats
+      lg:stats-horizontal  
+      bg-base-100
+      shadow-lg
+      rounded-2xl
+      w-full
+    "
+  >
+    <div className="stat text-center py-4">
+      <div className="stat-value text-primary text-2xl">
+        10+
+      </div>
+      <div className="stat-title text-sm">
+        Problems
+      </div>
+    </div>
+
+    <div className="stat text-center py-4">
+      <div className="stat-value text-secondary text-2xl">
+        50+
+      </div>
+      <div className="stat-title text-sm">
+        Sessions
+      </div>
+    </div>
+
+    <div className="stat text-center py-4">
+      <div className="stat-value text-accent text-2xl">
+        99%
+      </div>
+      <div className="stat-title text-sm">
+        Uptime
+      </div>
+    </div>
+  </div>
+</div>
+
+
         </div>
         {/* Right Content */}
-        <img src="/hero3.png" alt="CodeStep Platform" className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transistion-transform duration-500" />
+        <img src="/hero3.png" alt="CodeStep Platform" className="w-full h-auto rounded-3xl shadow-2xl border-4 border-base-100 hover:scale-105 transistion-transform duration-500 " />
       </div>
      </div>
      {/*FEATURES SECTION */}
