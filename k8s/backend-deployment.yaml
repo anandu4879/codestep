@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codestep-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: codestep-backend
+  template:
+    metadata:
+      labels:
+        app: codestep-backend
+    spec:
+      containers:
+        - name: backend
+          image: anandu4879/codestep-backend:v1
+          ports:
+            - containerPort: 5001

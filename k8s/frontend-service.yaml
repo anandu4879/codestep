@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: codestep-frontend-service
+spec:
+  selector:
+    app: codestep-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+  type: NodePort

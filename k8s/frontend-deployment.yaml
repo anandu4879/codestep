@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: codestep-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: codestep-frontend
+  template:
+    metadata:
+      labels:
+        app: codestep-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: anandu4879/codestep-frontend:v1
+          ports:
+            - containerPort: 80
