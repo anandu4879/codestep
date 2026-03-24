@@ -1,14 +1,124 @@
-version: "3.8"
+# ============================================================
+# WHY THIS DOCKER-COMPOSE STRUCTURE?
+#
+# 1. NAMED NETWORKS: Services communicate by name, not IP.
+#    backend and frontend are on separate networks.
+#    Only frontend can talk to backend — not mongo directly.
+#
+# 2. HEALTHCHECKS: Docker won't mark a container "healthy" until
+#    the app actually responds. Prevents "container started but
+#    app crashed on startup" silent failures.
+#
+# 3. NAMED VOLUMES: Data survives container restarts.
+#    Without volumes, MongoDB data is lost on `docker compose down`.
+#
+# 4. ENV FILES: Secrets stay out of docker-compose.yml.
+#    Never commit .env files to git.
+# ============================================================
+
+networks:
+  # WHY two networks?
+  # frontend-net: frontend ↔ backend communication
+  # backend-net:  backend ↔ mongodb communication
+  # frontend container has NO direct access to mongodb — defense in depth.
+  frontend-net:
+    driver: bridge
+  backend-net:
+    driver: bridge
+
+volumes:
+  # WHY named volume? Data persists across `docker compose down/up`.
+  # Anonymous volumes (just `-`) are deleted with `docker compose down -v`.
+  mongo-data:
+    driver: local
 
 services:
+  # ─────────────────────────────────────────
+  # MongoDB - runs locally for dev/staging
+  # In production, use MongoDB Atlas instead.
+  # ─────────────────────────────────────────
+  mongodb:
+    image: mongo:7.0-jammy
+    container_name: codestep-mongodb
+    restart: unless-stopped
+    networks:
+      - backend-net
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD:-changeme}
+      MONGO_INITDB_DATABASE: codestep
+    healthcheck:
+      # WHY healthcheck? Backend depends_on with condition: service_healthy.
+      # Without this, backend starts before mongo is ready → connection errors.
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    # WHY no ports exposed? MongoDB should never be accessible from outside.
+    # Only backend (on backend-net) can reach it.
+
+  # ─────────────────────────────────────────
+  # Backend - Express.js API
+  # ─────────────────────────────────────────
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: codestep-backend
+    restart: unless-stopped
+    networks:
+      - frontend-net   # frontend can call /api/*
+      - backend-net    # backend can call mongodb
     ports:
-      - "5001:5000"
+      - "5001:5000"    # expose for local dev / debugging
     env_file:
       - ./backend/.env
+    environment:
+      # Override DB_URL to use the docker service name 'mongodb'
+      # WHY? In docker-compose, services resolve by name, not localhost.
+      DB_URL: mongodb://${MONGO_ROOT_USER:-admin}:${MONGO_ROOT_PASSWORD:-changeme}@mongodb:27017/codestep?authSource=admin
+      PORT: 5001
+      NODE_ENV: development
+    depends_on:
+      mongodb:
+        # WHY condition: service_healthy?
+        # Ensures mongodb passes its healthcheck before backend starts.
+        # Simple depends_on only waits for container START, not readiness.
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:5001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
 
+  # ─────────────────────────────────────────
+  # Frontend - React (served by Nginx)
+  # ─────────────────────────────────────────
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # WHY build args? Vite bakes these into the JS bundle at build time.
+        # They are NOT available at runtime — must be passed here.
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:5001/api}
+        VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
+        VITE_STREAM_API_KEY: ${VITE_STREAM_API_KEY}
+    container_name: codestep-frontend
+    restart: unless-stopped
+    networks:
+      - frontend-net
     ports:
-      - "3000:80"
+      - "3000:8080"    # host:container (nginx listens on 8080)
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
