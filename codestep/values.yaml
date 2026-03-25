@@ -1,0 +1,15 @@
+frontend:
+  image: anandu4879/codestep-frontend:latest
+  apiUrl: http://backend:5000/api
+
+backend:
+  image: anandu4879/codestep-backend:latest
+  port: 5000
+
+mongodb:
+  image: mongo:7
+  port: 27017
+  username: admin
+  password: changeme
+  database: codestep
+  storage: 1Gi
