@@ -17,8 +17,6 @@ spec:
           image: {{ .Values.backend.image }}
           ports:
             - containerPort: 5000
-          env:
-            - name: DB_URL
-              value: mongodb://{{ .Values.mongodb.username }}:{{ .Values.mongodb.password }}@mongodb:27017/{{ .Values.mongodb.database }}?authSource=admin
-            - name: PORT
-              value: "5000"
+          envFrom:
+            - secretRef:
+                name: backend-secret
