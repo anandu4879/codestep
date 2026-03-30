@@ -1,5 +1,5 @@
 frontend:
-  image: anandu4879/codestep-frontend:v10
+  image: anandu4879/codestep-frontend:v11
   apiUrl: http://backend:5000/api
 
 backend:
