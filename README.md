@@ -122,6 +122,6 @@
 3. Synced Clerk authentication with backend using webhooks  
 4. Implemented polling as a simple real-time MVP solution  
 5. Designed layered error handling across frontend, backend, and DB  
-6. Deployed a production-ready app with logging and health checks  
+6. Deployed a production-ready app with logging and health checkss 
 
 
