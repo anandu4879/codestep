@@ -1,9 +1,9 @@
 frontend:
-  image: anandu4879/codestep-frontend:latest
+  image: anandu4879/codestep-frontend:v10
   apiUrl: http://backend:5000/api
 
 backend:
-  image: anandu4879/codestep-backend:latest
+  image: anandu4879/codestep-backend:v1
   port: 5000
 
 mongodb:
