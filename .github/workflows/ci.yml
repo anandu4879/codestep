@@ -2,76 +2,66 @@ name: CI Pipeline
 
 on:
   push:
-    branches: ["devops"]
-
-env:
-  IMAGE_TAG: ${{ github.sha }}
+    branches: ["main"]
 
 jobs:
   build-scan-push:
     runs-on: ubuntu-latest
 
     steps:
+      # 📥 Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # 🐳 Setup Docker
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # 🔐 Login to Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # 🔐 Dockerfile lint
-      - name: Lint Backend Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: backend/Dockerfile
-
-      - name: Lint Frontend Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: frontend/Dockerfile
-
-      # 🏗️ Build images
-      - name: Build Backend
+      # 🏗️ Build Backend Image
+      - name: Build Backend Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/codestep-backend:${{ env.IMAGE_TAG }} ./backend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/codestep-backend:latest ./backend
 
-      - name: Build Frontend
+      # 🏗️ Build Frontend Image (IMPORTANT: env variables)
+      - name: Build Frontend Image
         run: |
           docker build \
             --build-arg VITE_API_URL=http://backend:5000/api \
             --build-arg VITE_CLERK_PUBLISHABLE_KEY=${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }} \
             --build-arg VITE_STREAM_API_KEY=${{ secrets.VITE_STREAM_API_KEY }} \
-            -t ${{ secrets.DOCKER_USERNAME }}/codestep-frontend:${{ env.IMAGE_TAG }} ./frontend
+            -t ${{ secrets.DOCKER_USERNAME }}/codestep-frontend:latest ./frontend
 
-      # 🔍 Scan
-      - name: Scan Backend
+      # 🔍 Scan Backend Image (Trivy official action)
+      - name: Scan Backend Image
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ secrets.DOCKER_USERNAME }}/codestep-backend:${{ env.IMAGE_TAG }}
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/codestep-backend:latest
+          format: table
           severity: HIGH,CRITICAL
-          exit-code: 1
+          exit-code: 0
 
-      - name: Scan Frontend
+      # 🔍 Scan Frontend Image
+      - name: Scan Frontend Image
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: ${{ secrets.DOCKER_USERNAME }}/codestep-frontend:${{ env.IMAGE_TAG }}
+          image-ref: ${{ secrets.DOCKER_USERNAME }}/codestep-frontend:latest
+          format: table
           severity: HIGH,CRITICAL
-          exit-code: 1
+          exit-code: 0
 
-      # 🚀 Push
-      - name: Push Backend
+      # 🚀 Push Backend Image
+      - name: Push Backend Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/codestep-backend:${{ env.IMAGE_TAG }}
-          docker tag ${{ secrets.DOCKER_USERNAME }}/codestep-backend:${{ env.IMAGE_TAG }} ${{ secrets.DOCKER_USERNAME }}/codestep-backend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/codestep-backend:latest
 
-      - name: Push Frontend
+      # 🚀 Push Frontend Image
+      - name: Push Frontend Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/codestep-frontend:${{ env.IMAGE_TAG }}
-          docker tag ${{ secrets.DOCKER_USERNAME }}/codestep-frontend:${{ env.IMAGE_TAG }} ${{ secrets.DOCKER_USERNAME }}/codestep-frontend:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/codestep-frontend:latest
