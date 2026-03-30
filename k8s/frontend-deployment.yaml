@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: anandu4879/codestep-frontend:v1
+          image: anandu4879/codestep-frontend:v11
           ports:
             - containerPort: 80
 
